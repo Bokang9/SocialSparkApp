@@ -108,7 +108,6 @@ fun getSocialSpark(time: String): String {
         "night" -> "Leave a thoughtful comment on a friend's post."
         else -> "" // Handled by the validation logic
     }
-
 }
 
 @Preview(showBackground = true)
