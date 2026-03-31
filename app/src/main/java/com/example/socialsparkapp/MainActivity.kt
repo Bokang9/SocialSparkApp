@@ -106,7 +106,7 @@ fun getSocialSpark(time: String): String {
         "dinner" -> "Call a friend or relative for a 5-minute catch-up."
         "after dinner" -> "Leave a thoughtful comment on a friend's post."
         "night" -> "Leave a thoughtful comment on a friend's post."
-        else -> "" // Handled by the validation logic
+        else -> ""// Handled by the validation logic
     }
 }
 
