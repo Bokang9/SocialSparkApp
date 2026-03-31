@@ -1,6 +1,7 @@
 package com.example.socialsparkapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -25,9 +26,12 @@ import androidx.compose.ui.unit.dp
 // import androidx.core.app.RemoteInput
 import com.example.socialsparkapp.ui.theme.SocialSparkAppTheme
 
+private const val TAG = "MainActivity"
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(TAG, "onCreate: Activity started")
         enableEdgeToEdge()
         setContent {
             SocialSparkAppTheme {
@@ -57,10 +61,13 @@ fun SocialSparkApp(modifier: Modifier = Modifier) {
         Spacer(Modifier.height(8.dp))
 
         Button(onClick = {
+            Log.d(TAG, "Get Suggestion clicked. Input: $timeInput")
             if (validateInput(timeInput)) {
                 suggestion = getSocialSpark(timeInput)
+                Log.i(TAG, "Suggestion generated: $suggestion")
                 errorMessage = ""
             } else {
+                Log.w(TAG, "Validation failed for input: $timeInput")
                 suggestion = ""
                 errorMessage = "Invalid time. Try: morning , mid-morning , afternoon , afternoon snack time , dinner , after dinner , night ."
             }
@@ -79,6 +86,7 @@ fun SocialSparkApp(modifier: Modifier = Modifier) {
         Spacer(Modifier.height(8.dp))
 
         Button(onClick = {
+            Log.d(TAG, "Reset clicked. Clearing inputs.")
             timeInput = ""
             suggestion = ""
             errorMessage = ""
@@ -90,14 +98,18 @@ fun SocialSparkApp(modifier: Modifier = Modifier) {
 
 // Validation Logic
 fun validateInput(input: String): Boolean {
+    Log.v(TAG, "validateInput: input='$input'")
     val validTimes = listOf("morning", "mid-morning", "afternoon", "afternoon snack time", "dinner", "after dinner" , "night")
-    return validTimes.contains(input.lowercase())
+    val result = validTimes.contains(input.lowercase())
+    Log.v(TAG, "validateInput: result=$result")
+    return result
 }
 
 
 
 // Social spark logic
 fun getSocialSpark(time: String): String {
+    Log.d(TAG, "getSocialSpark: time='$time'")
     return when (time.lowercase()) {
         "morning" -> "Send a 'Good morning' text to a family member."
         "mid-morning" -> "Reach out to a colleague with a quick 'Thank you'."
@@ -106,7 +118,10 @@ fun getSocialSpark(time: String): String {
         "dinner" -> "Call a friend or relative for a 5-minute catch-up."
         "after dinner" -> "Leave a thoughtful comment on a friend's post."
         "night" -> "Leave a thoughtful comment on a friend's post."
-        else -> ""// Handled by the validation logic
+        else -> {
+            Log.e(TAG, "getSocialSpark: Unexpected time input: $time")
+            ""
+        }
     }
 }
 
