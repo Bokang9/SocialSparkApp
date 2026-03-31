@@ -61,15 +61,17 @@ fun SocialSparkApp(modifier: Modifier = Modifier) {
         Spacer(Modifier.height(8.dp))
 
         Button(onClick = {
-            Log.d(TAG, "Get Suggestion clicked. Input: $timeInput")
-            if (validateInput(timeInput)) {
-                suggestion = getSocialSpark(timeInput)
+            val cleanedInput = timeInput.trim()
+            Log.d(TAG, "Get Suggestion clicked. Input: $cleanedInput")
+            
+            if (validateInput(cleanedInput)) {
+                suggestion = getSocialSpark(cleanedInput)
                 Log.i(TAG, "Suggestion generated: $suggestion")
                 errorMessage = ""
             } else {
-                Log.w(TAG, "Validation failed for input: $timeInput")
+                Log.w(TAG, "Validation failed for input: $cleanedInput")
                 suggestion = ""
-                errorMessage = "Invalid time. Try: morning , mid-morning , afternoon , afternoon snack time , dinner , after dinner , night ."
+                errorMessage = "Invalid time. Try: morning, mid-morning, afternoon, afternoon snack time, dinner, after dinner, night."
             }
         }) {
             Text("Get Suggestion")
@@ -98,19 +100,26 @@ fun SocialSparkApp(modifier: Modifier = Modifier) {
 
 // Validation Logic
 fun validateInput(input: String): Boolean {
-    Log.v(TAG, "validateInput: input='$input'")
-    val validTimes = listOf("morning", "mid-morning", "afternoon", "afternoon snack time", "dinner", "after dinner" , "night")
-    val result = validTimes.contains(input.lowercase())
+    // Ensuring the input is trimmed before processing
+    val cleanedInput = input.trim()
+    Log.v(TAG, "validateInput: input='$cleanedInput'")
+    
+    val validTimes = listOf(
+        "morning", "mid-morning", "afternoon", 
+        "afternoon snack time", "dinner", "after dinner", "night"
+    )
+    val result = validTimes.contains(cleanedInput.lowercase())
     Log.v(TAG, "validateInput: result=$result")
     return result
 }
 
-
-
 // Social spark logic
 fun getSocialSpark(time: String): String {
-    Log.d(TAG, "getSocialSpark: time='$time'")
-    return when (time.lowercase()) {
+    // Ensuring the input is trimmed before processing
+    val cleanedTime = time.trim()
+    Log.d(TAG, "getSocialSpark: time='$cleanedTime'")
+    
+    return when (cleanedTime.lowercase()) {
         "morning" -> "Send a 'Good morning' text to a family member."
         "mid-morning" -> "Reach out to a colleague with a quick 'Thank you'."
         "afternoon" -> "Share a funny meme or interesting link with a friend."
@@ -119,7 +128,7 @@ fun getSocialSpark(time: String): String {
         "after dinner" -> "Leave a thoughtful comment on a friend's post."
         "night" -> "Leave a thoughtful comment on a friend's post."
         else -> {
-            Log.e(TAG, "getSocialSpark: Unexpected time input: $time")
+            Log.e(TAG, "getSocialSpark: Unexpected time input: $cleanedTime")
             ""
         }
     }
